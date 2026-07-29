@@ -3,6 +3,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+// import { toast } from "sonner"
 
 type LoginState = {
     success : true,
@@ -62,7 +63,11 @@ export const loginAction = async (redirectTo : string, prevState : LoginState , 
         } else if (decodedToken.role === "AUTHOR"){
             redirect("/author-dashboard");
         }
-    }
 
-    return result
+        return result
+    }
+    else{
+        redirect("/register");
+    }
+    
 }
