@@ -6,7 +6,15 @@ app
 │   ├── page.tsx                  // Home
 │
 ├── (auth)
-
+|   ├── _actions
+|   |   ├──
+|   ├── _components
+|   |   ├──
+|   ├── login
+|   |   ├──
+|   ├── register
+|   |   ├──
+|   └── layout.tsx
 │
 ├── (dashboard)
 │   └── 

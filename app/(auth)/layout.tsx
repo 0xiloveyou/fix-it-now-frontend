@@ -17,4 +17,4 @@ const AuthGroupLayout = async (
   )
 }
 
-export default <Auth></Auth>GroupLayout
+export default AuthGroupLayout
