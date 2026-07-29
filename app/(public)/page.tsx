@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Footer } from '@/components/shared/footer'
+import Link from 'next/link'
 
-export default function Page() {
+export default function HomePage() {
   const services = [
     { icon: '🔧', title: 'Plumbing', description: 'Expert plumbing repairs and installations' },
     { icon: '⚡', title: 'Electrical', description: 'Licensed electricians for all your needs' },
@@ -43,9 +44,12 @@ export default function Page() {
               Connect with certified technicians in your area. Fast, reliable, and transparent pricing for all your home repair needs.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link href="/technicians">
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                 Book a Technician
-              </Button>
+               </Button>
+              </Link>
+              
               <Button size="lg" variant="outline">
                 Learn More
               </Button>
@@ -147,9 +151,11 @@ export default function Page() {
             Join thousands of homeowners who trust FixItNow for their home repair needs.
           </p>
           <div className="mt-10">
+            <Link href="/services">
             <Button size="lg" variant="secondary" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
               Get Started Now
             </Button>
+            </Link>
           </div>
         </div>
       </section>

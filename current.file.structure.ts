@@ -7,13 +7,13 @@ app
 │
 ├── (auth)
 |   ├── _actions
-|   |   ├──
+|   |    ├──
 |   ├── _components
-|   |   ├──
+|   |    ├──
 |   ├── login
-|   |   ├──
+|   |    ├──
 |   ├── register
-|   |   ├──
+|   |    ├── page.tsx
 |   └── layout.tsx
 │
 ├── (dashboard)
@@ -44,7 +44,11 @@ root
 │   ├── Ui
 |   |    ├── button.tsx
 |   |    ├── card.tsx
-├──
+|
+├── service
+|    ├── getme.ts
+
+
 
 
 
