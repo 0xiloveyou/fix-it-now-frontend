@@ -13,6 +13,8 @@ app
 │
 ├── loading.tsx
 
+
+
 root
 │
 ├── component
