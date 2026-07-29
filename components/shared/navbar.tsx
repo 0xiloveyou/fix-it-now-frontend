@@ -46,7 +46,7 @@ export function Navbar({ isLoggedIn = false, userRole = 'customer', userName = '
               </Link>
             ))}
           </div>
-
+ 
           {/* Desktop Right Section */}
           <div className="hidden md:flex items-center gap-4">
             {!isLoggedIn ? (
