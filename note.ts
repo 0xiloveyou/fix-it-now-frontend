@@ -28,4 +28,7 @@ pnpm dlx shadcn@latest add input
 
 pnpm add sonner
 
+pnpm dlx shadcn@latest add label
+pnpm dlx shadcn@latest add select
+
 */
