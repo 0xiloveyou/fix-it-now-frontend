@@ -17,7 +17,18 @@ app
 |   └── layout.tsx
 │
 ├── (dashboard)
-│   └── 
+│   ├── admin
+│   |   ├── page.tsx
+│   |   ├── 
+│   |   ├── 
+│   |   ├── 
+│   |  
+│   ├── customer
+│   |   ├── page.tsx
+│   |   
+│   ├── technician
+│   |   ├── page.tsx
+│   |   
 │
 ├── loading.tsx
 
