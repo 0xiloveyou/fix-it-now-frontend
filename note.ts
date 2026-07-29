@@ -23,6 +23,9 @@ pnpm add @types/jsonwebtoken
 
 
 pnpm dlx shadcn@latest add card
+pnpm dlx shadcn@latest add input
 
+
+pnpm add sonner
 
 */
