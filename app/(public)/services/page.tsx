@@ -6,8 +6,6 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-
 
 interface Service {
   id: string;
@@ -26,8 +24,6 @@ interface Service {
 }
 
 export default function ServicesPage() {
-  
-  const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -145,12 +141,11 @@ export default function ServicesPage() {
                   </p>
                 </div>
 
-                 <Button
-  className="w-full"
-  onClick={() => router.push(`/services/${service.id}`)}
->
-  View Details
-</Button>
+                 <Link href={`/services/${service.id}`} className="block">
+                  <Button className="w-full">
+                    View Details
+                  </Button>
+                 </Link>
               </CardContent>
             </Card>
           ))}
