@@ -4,28 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, Search, LogOut, LogIn, UserPlus, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NavbarProps } from '@/lib/types';
+import { toast } from 'sonner';
+import { logout } from '@/service/logout';
+import { useRouter } from 'next/navigation';
 
-type IUser = {
-  success: boolean;
-  message: string;
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      status: string;
-      role: string;
-      phone?: string;
-      profileImage?: string;
-      createdAt: string;
-      updatedAt: string;
-    };
-  };
-};
-
-export type NavbarProps = {
-  user?: IUser | null;
-};
 
 export function Navbar({ user }: NavbarProps) {
   const isLoggedIn = user?.success && user?.data?.user;
@@ -40,6 +23,31 @@ export function Navbar({ user }: NavbarProps) {
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
+
+
+  const router = useRouter()
+  const handleUserMenuAction = async (action: string) => {
+
+    if(action === "dashboard" ){
+      if(userRole === "CUSTOMER"){
+        router.push("/dashboard")
+      }
+      else if(userRole === "TECHNICIAN"){
+        router.push("/author-dashboard")
+      }
+      else if(userRole === "ADMIN"){
+        router.push("/admin-dashboard")
+      }
+
+      return;
+    }
+
+    if(action === "logout"){
+        await logout();
+        toast.success("User Logged Out Successfully!");
+        router.push("/login");
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
@@ -108,8 +116,9 @@ export function Navbar({ user }: NavbarProps) {
                         Profile
                       </Link>
                       <hr className="my-1" />
-                      <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2 flex items-center">
-                        <LogOut className="w-4 h-4" />
+                      <button onClick={async () => {
+                await handleUserMenuAction("logout")}} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2 flex items-center">
+                        <LogOut  className="w-4 h-4" />
                         Logout
                       </button>
                     </div>
@@ -150,7 +159,7 @@ export function Navbar({ user }: NavbarProps) {
             {!isLoggedIn ? (
               <div className="flex gap-2 px-4">
                 <Link href="/login" className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button  variant="outline" size="sm" className="w-full">
                     Login
                   </Button>
                 </Link>
@@ -172,7 +181,8 @@ export function Navbar({ user }: NavbarProps) {
                     Profile
                   </Button>
                 </Link>
-                <Button variant="outline" className="w-full">
+                <Button  onClick={async () => {
+                await handleUserMenuAction("logout")}} variant="outline" className="w-full">
                   Logout
                 </Button>
               </div>
