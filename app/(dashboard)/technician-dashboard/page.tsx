@@ -98,7 +98,7 @@ export default function TechnicianDashboardPage() {
               </Button>
             </Link>
 
-            <Link href="/technician-dashboard/bookings">
+            <Link href="/technician-dashboard/booking">
               <Button variant="outline">
                 View Bookings
               </Button>
