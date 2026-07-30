@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   CalendarCheck,
@@ -9,12 +10,84 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+
+interface Booking {
+  id: string;
+  status:
+    | "REQUESTED"
+    | "ACCEPTED"
+    | "DECLINED"
+    | "PAID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED";
+  totalPrice: number;
+  createdAt: string;
+
+  service: {
+    id: string;
+    title: string;
+  };
+}
 
 export default function CustomerDashboardPage() {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getBookings = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/bookings/my`,
+          {
+            credentials: "include",
+            cache: "no-store",
+          }
+        );
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message);
+        }
+
+        setBookings(result.data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getBookings();
+  }, []);
+
+  const totalBookings = bookings.length;
+
+  const activeBookings = useMemo(() => {
+    return bookings.filter((booking) =>
+      [
+        "REQUESTED",
+        "ACCEPTED",
+        "PAID",
+        "IN_PROGRESS",
+      ].includes(booking.status)
+    ).length;
+  }, [bookings]);
+
+  const completedBookings = useMemo(() => {
+    return bookings.filter(
+      (booking) => booking.status === "COMPLETED"
+    ).length;
+  }, [bookings]);
+
+  const cancelledBookings = useMemo(() => {
+    return bookings.filter(
+      (booking) => booking.status === "CANCELLED"
+    ).length;
+  }, [bookings]);
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -40,7 +113,7 @@ export default function CustomerDashboardPage() {
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                0
+                {loading ? "..." : totalBookings}
               </h2>
             </div>
 
@@ -56,7 +129,7 @@ export default function CustomerDashboardPage() {
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                0
+                {loading ? "..." : activeBookings}
               </h2>
             </div>
 
@@ -72,7 +145,7 @@ export default function CustomerDashboardPage() {
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                0
+                {loading ? "..." : completedBookings}
               </h2>
             </div>
 
@@ -88,7 +161,7 @@ export default function CustomerDashboardPage() {
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
-                0
+                {loading ? "..." : cancelledBookings}
               </h2>
             </div>
 
@@ -129,13 +202,40 @@ export default function CustomerDashboardPage() {
 
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="text-xl font-semibold mb-5">
             Recent Bookings
           </h2>
 
-          <p className="text-muted-foreground">
-            You do not have any bookings yet.
-          </p>
+          {loading ? (
+            <p>Loading...</p>
+          ) : bookings.length === 0 ? (
+            <p className="text-muted-foreground">
+              You do not have any bookings yet.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {bookings.slice(0, 5).map((booking) => (
+                <div
+                  key={booking.id}
+                  className="flex items-center justify-between rounded-lg border p-4"
+                >
+                  <div>
+                    <h3 className="font-semibold">
+                      {booking.service.title}
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground">
+                      {booking.status}
+                    </p>
+                  </div>
+
+                  <div className="font-semibold">
+                    ৳{booking.totalPrice}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
