@@ -56,12 +56,12 @@ export const loginAction = async (redirectTo : string, prevState : LoginState , 
             redirect(redirectTo)
         }
 
-        if(decodedToken.role === "USER"){
-            redirect("/dashboard");
+        if(decodedToken.role === "CUSTOMER"){
+            redirect("/technicians");
         } else if (decodedToken.role === "ADMIN"){
-            redirect("/admin");
-        } else if (decodedToken.role === "AUTHOR"){
-            redirect("/author-dashboard");
+            redirect("/admin-dashboard");
+        } else if (decodedToken.role === "TECHNICIAN"){
+            redirect("/technician-dashboard");
         }
 
         return result
