@@ -227,11 +227,23 @@ export default function MyBookingsPage() {
                     </Button>
                   </Link>
 
-                  {booking.status === "REQUESTED" && (
-                    <Button variant="destructive">
-                      Cancel Booking
-                    </Button>
-                  )}
+                  <div className="flex gap-3">
+  {booking.status === "REQUESTED" && (
+    <Button variant="destructive">
+      Cancel Booking
+    </Button>
+  )}
+
+  {booking.status === "ACCEPTED" && (
+    <Link
+      href={`/customer-dashboard/payment/${booking.id}`}
+    >
+      <Button>
+        Pay Now
+      </Button>
+    </Link>
+  )}
+</div>
                 </div>
               </CardContent>
             </Card>

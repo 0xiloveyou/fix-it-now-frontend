@@ -42,8 +42,8 @@ app
 │       ├── create
 |       |    ├──page.tsx
 |       |    
-│       ├── acceptbooking
-│       ├   ├──page.tsx
+│       ├── booking
+│       |   ├── page.tsx
 │       |
 ├── loading.tsx
 
