@@ -29,6 +29,8 @@ app
 │   |  
 │   ├── customer-dashboard
 │   |   ├── page.tsx
+│   |   ├── booking
+│   |        ├── page.tsx
 │   |   
 │   ├── technician-dashboard
 │       ├── page.tsx
