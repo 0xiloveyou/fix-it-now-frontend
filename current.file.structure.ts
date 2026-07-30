@@ -4,30 +4,31 @@
 app
 ├── (public)
 │   ├── page.tsx                  // Home
+│   ├── layout.tsx                  
 │
 ├── (auth)
 |   ├── _actions
-|   |    ├──
+|   |    ├── authAction.ts
 |   ├── _components
 |   |    ├──
 |   ├── login
-|   |    ├──
+|   |    ├── page.tsx
 |   ├── register
 |   |    ├── page.tsx
 |   └── layout.tsx
 │
 ├── (dashboard)
-│   ├── admin
-│   |   ├── page.tsx
+│   ├── admin-dashboard
+│   |   ├── 
 │   |   ├── 
 │   |   ├── 
 │   |   ├── 
 │   |  
-│   ├── customer
-│   |   ├── page.tsx
+│   ├── customer-dashboard
+│   |   ├── 
 │   |   
-│   ├── technician
-│   |   ├── page.tsx
+│   ├── technician-dashboard
+│   |   ├── 
 │   |   
 │
 ├── loading.tsx
