@@ -5,6 +5,9 @@ app
 ├── (public)
 │   ├── page.tsx                  // Home
 │   ├── layout.tsx                  
+│   ├── services                 
+│        ├── page.tsx
+│        ├── [id]
 │
 ├── (auth)
 |   ├── _actions
@@ -28,7 +31,7 @@ app
 │   |   ├── 
 │   |   
 │   ├── technician-dashboard
-│   |   ├── 
+│   |   ├── page.tsx
 │   |   
 │
 ├── loading.tsx
