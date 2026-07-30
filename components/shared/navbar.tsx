@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 export function Navbar({ user }: NavbarProps) {
   const isLoggedIn = user?.success && user?.data?.user;
   const userName = user?.data?.user?.name || 'User';
-  const userRole = user?.data?.user?.role?.toLowerCase() || 'customer';
+  const userRole = user?.data?.user?.role;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -30,7 +30,7 @@ export function Navbar({ user }: NavbarProps) {
 
     if(action === "dashboard" ){
       if(userRole === "CUSTOMER"){
-        router.push("/dashboard")
+        router.push("/customer-dashboard")
       }
       else if(userRole === "TECHNICIAN"){
         router.push("/author-dashboard")
@@ -100,11 +100,11 @@ export function Navbar({ user }: NavbarProps) {
                   <Search className="w-5 h-5 text-gray-600" />
                 </button>
                 <div className="flex items-center gap-3 pl-3 border-l border-gray-200">
-                  <Link href="/dashboard">
-                    <Button variant="outline" size="sm">
+                  
+                    <Button  onClick={async () => await handleUserMenuAction("dashboard")} variant="outline" size="sm">
                       Dashboard
                     </Button>
-                  </Link>
+                 
                   <div className="relative group">
                     <button className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold hover:bg-blue-700 transition-colors">
                       {userName.charAt(0).toUpperCase()}
