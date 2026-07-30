@@ -34,6 +34,9 @@ app
 │   |   ├── mybooking
 │   |   |     ├── page.tsx
 │   |   |    
+│   |   ├── payment
+│   |   |     ├── [bookingId]
+│   |   |          ├── page.tsx
 │   ├── technician-dashboard
 │       ├── page.tsx
 │       ├── services
