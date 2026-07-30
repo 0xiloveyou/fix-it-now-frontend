@@ -30,8 +30,10 @@ app
 │   ├── customer-dashboard
 │   |   ├── page.tsx
 │   |   ├── booking
-│   |        ├── page.tsx
-│   |   
+│   |   |     ├── page.tsx
+│   |   ├── mybooking
+│   |   |     ├── page.tsx
+│   |   |    
 │   ├── technician-dashboard
 │       ├── page.tsx
 │       ├── services

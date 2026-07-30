@@ -31,7 +31,7 @@ pnpm add sonner
 pnpm dlx shadcn@latest add label
 pnpm dlx shadcn@latest add select
 pnpm dlx shadcn@latest add textarea
-
+pnpm dlx shadcn@latest add badge
 
 
 */

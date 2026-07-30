@@ -183,7 +183,7 @@ export default function CustomerDashboardPage() {
               <Button>Browse Services</Button>
             </Link>
 
-            <Link href="/customer-dashboard/bookings">
+            <Link href="/customer-dashboard/mybooking">
               <Button variant="outline">
                 My Bookings
               </Button>
