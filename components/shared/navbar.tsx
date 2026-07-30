@@ -5,13 +5,32 @@ import Link from 'next/link';
 import { Menu, X, Search, LogOut, LogIn, UserPlus, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface NavbarProps {
-  isLoggedIn?: boolean;
-  userRole?: 'customer' | 'technician' | 'admin';
-  userName?: string;
-}
+type IUser = {
+  success: boolean;
+  message: string;
+  data: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      status: string;
+      role: string;
+      phone?: string;
+      profileImage?: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
+};
 
-export function Navbar({ isLoggedIn = false, userRole = 'customer', userName = 'User' }: NavbarProps) {
+export type NavbarProps = {
+  user?: IUser | null;
+};
+
+export function Navbar({ user }: NavbarProps) {
+  const isLoggedIn = user?.success && user?.data?.user;
+  const userName = user?.data?.user?.name || 'User';
+  const userRole = user?.data?.user?.role?.toLowerCase() || 'customer';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -46,7 +65,7 @@ export function Navbar({ isLoggedIn = false, userRole = 'customer', userName = '
               </Link>
             ))}
           </div>
- 
+
           {/* Desktop Right Section */}
           <div className="hidden md:flex items-center gap-4">
             {!isLoggedIn ? (
