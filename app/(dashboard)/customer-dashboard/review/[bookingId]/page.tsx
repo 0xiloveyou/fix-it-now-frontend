@@ -3,7 +3,8 @@
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
+import { ArrowLeft, Star } from "lucide-react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -123,113 +124,98 @@ export default function ReviewPage() {
 
 
   return (
+  <div className="mx-auto max-w-3xl py-10 px-4">
+    <div className="mb-8 flex items-center justify-between">
+      <div>
+        <h1 className="text-3xl font-bold">Leave a Review</h1>
+        <p className="mt-2 text-muted-foreground">
+          Share your experience to help other customers.
+        </p>
+      </div>
 
-    <div className="mx-auto max-w-xl py-10">
-
-
-      <Card>
-
-
-        <CardHeader>
-
-          <CardTitle>
-            Review {service}
-          </CardTitle>
-
-        </CardHeader>
-
-
-
-        <CardContent className="space-y-6">
-
-
-          <div>
-
-            <p className="font-medium mb-2">
-              Rating
-            </p>
-
-
-            <div className="flex gap-2">
-
-
-              {[1,2,3,4,5].map((star)=>(
-
-                <button
-
-                  key={star}
-
-                  type="button"
-
-                  onClick={()=>
-                    setRating(star)
-                  }
-
-                  className={`text-3xl ${
-                    rating >= star
-                    ? "text-yellow-500"
-                    : "text-gray-300"
-                  }`}
-
-                >
-                  ★
-                </button>
-
-
-              ))}
-
-
-            </div>
-
-
-          </div>
-
-
-
-
-          <Textarea
-
-            placeholder="Write your experience..."
-
-            value={comment}
-
-            onChange={(e)=>
-              setComment(e.target.value)
-            }
-
-            rows={5}
-
-          />
-
-
-
-
-          <Button
-
-            onClick={submitReview}
-
-            disabled={loading}
-
-          >
-
-            {
-              loading
-              ? "Submitting..."
-              : "Submit Review"
-            }
-
-
-          </Button>
-
-
-
-        </CardContent>
-
-
-      </Card>
-
-
+      <Link href="/customer-dashboard/mybooking">
+        <Button variant="outline">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+      </Link>
     </div>
 
-  );
+    <Card className="shadow-lg border-0">
+      <CardHeader className="border-b">
+        <CardTitle className="text-2xl">
+          {service}
+        </CardTitle>
+
+        <p className="text-sm text-muted-foreground">
+          Booking ID: {bookingId}
+        </p>
+      </CardHeader>
+
+      <CardContent className="space-y-8 pt-8">
+        <div className="text-center">
+          <p className="mb-5 text-lg font-semibold">
+            How was your experience?
+          </p>
+
+          <div className="flex justify-center gap-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className="transition hover:scale-125"
+              >
+                <Star
+                  className={`h-10 w-10 ${
+                    rating >= star
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-4 text-muted-foreground">
+            {rating === 1 && "Very Poor 😞"}
+            {rating === 2 && "Poor 😕"}
+            {rating === 3 && "Average 🙂"}
+            {rating === 4 && "Good 😊"}
+            {rating === 5 && "Excellent 🤩"}
+          </p>
+        </div>
+
+        <div>
+          <label className="mb-2 block font-medium">
+            Your Review
+          </label>
+
+          <Textarea
+            rows={6}
+            placeholder="Tell others about your experience with this technician..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </div>
+
+        <div className="flex justify-end gap-4">
+          <Link href="/customer-dashboard/mybooking">
+            <Button variant="outline">
+              Cancel
+            </Button>
+          </Link>
+
+          <Button
+            size="lg"
+            disabled={loading || comment.trim().length < 10}
+            onClick={submitReview}
+          >
+            {loading ? "Submitting..." : "Submit Review"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+);
 }
