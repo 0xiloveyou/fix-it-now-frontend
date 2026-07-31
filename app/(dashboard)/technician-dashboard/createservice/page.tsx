@@ -35,16 +35,16 @@ export default function CreateServicePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      categoryId: searchParams.get("categoryId") ?? "",
-      title: "",
-      description: "",
-      price: 0,
-      duration: 30,
-    },
-  });
+  const form = useForm<FormValues, any, FormValues>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    categoryId: searchParams.get("categoryId") ?? "",
+    title: "",
+    description: "",
+    price: 0,
+    duration: 30,
+  },
+});
 
   const categoryName = searchParams.get("categoryName") ?? "";
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,8 +97,23 @@ export default function CreateServicePage() {
               <FormField control={form.control} name="categoryId" render={({field})=>(
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <FormControl><Input value={categoryName} disabled readOnly /></FormControl>
-                  <input type="hidden" {...field}/>
+                  <FormField
+  control={form.control}
+  name="categoryId"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Category</FormLabel>
+
+      <FormControl>
+        <Input value={categoryName} disabled />
+      </FormControl>
+
+      <input type="hidden" value={field.value} name={field.name} />
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
                   <FormMessage/>
                 </FormItem>
               )}/>

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import {
   Controller,
   FormProvider,
@@ -11,67 +12,48 @@ import {
 } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
 
 const Form = FormProvider
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => {
+>(
+  props: ControllerProps<TFieldValues, TName>
+) => {
   return <Controller {...props} />
 }
 
-const FormItemContext = React.createContext<{
-  id: string
-}>({ id: "" })
-
-const FormItem = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const id = React.useId()
-
+const FormItem = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
   return (
-    <FormItemContext.Provider value={{ id }}>
-      <div
-        ref={ref}
-        className={cn("space-y-2", className)}
-        {...props}
-      />
-    </FormItemContext.Provider>
-  )
-})
-
-FormItem.displayName = "FormItem"
-
-const FormLabel = React.forwardRef<
-  React.ElementRef<typeof Label>,
-  React.ComponentPropsWithoutRef<typeof Label>
->(({ className, ...props }, ref) => {
-  const { id } = React.useContext(FormItemContext)
-
-  return (
-    <Label
-      ref={ref}
-      className={className}
-      htmlFor={id}
+    <div
+      className={cn("space-y-2", className)}
       {...props}
     />
   )
-})
+}
+
+const FormLabel = React.forwardRef<
+  React.ElementRef<"label">,
+  React.ComponentPropsWithoutRef<"label">
+>(({ className, ...props }, ref) => (
+  <label
+    ref={ref}
+    className={cn("text-sm font-medium", className)}
+    {...props}
+  />
+))
 
 FormLabel.displayName = "FormLabel"
 
 const FormControl = React.forwardRef<
-  HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement>
->(({ ...props }, ref) => {
-  const { id } = React.useContext(FormItemContext)
-
-  return <input ref={ref} id={id} {...props} />
+  React.ElementRef<typeof Slot>,
+  React.ComponentPropsWithoutRef<typeof Slot>
+>((props, ref) => {
+  return <Slot ref={ref} {...props} />
 })
 
 FormControl.displayName = "FormControl"
@@ -79,9 +61,13 @@ FormControl.displayName = "FormControl"
 const FormMessage = ({
   className,
   children,
-}: React.HTMLAttributes<HTMLParagraphElement>) => {
+  ...props
+}: React.ComponentProps<"p">) => {
   return (
-    <p className={cn("text-sm text-red-500", className)}>
+    <p
+      className={cn("text-sm text-red-500", className)}
+      {...props}
+    >
       {children}
     </p>
   )
