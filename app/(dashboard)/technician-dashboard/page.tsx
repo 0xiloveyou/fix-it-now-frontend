@@ -7,38 +7,62 @@ import {
   Calendar,
   ClipboardList,
   Wrench,
+  UserCog,
+  Loader2,
 } from "lucide-react";
-import { UserCog } from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-
 export default function TechnicianDashboardPage() {
   const [reviewCount, setReviewCount] = useState(0);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+
   useEffect(() => {
-  const getReviewCount = async () => {
-    try {
-      const technicianId = "YOUR_TECHNICIAN_ID"; // Replace with logged-in technician ID
+    const getReviewCount = async () => {
+      try {
+        // Get logged-in user
+        const userRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/user/me`,
+          {
+            credentials: "include",
+          }
+        );
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/reviews/technician/${technicianId}`,
-        {
-          credentials: "include",
+        const userResult = await userRes.json();
+
+        if (!userRes.ok) {
+          throw new Error(userResult.message);
         }
-      );
 
-      const result = await res.json();
+        const technicianId = userResult.data.user.id;
 
-      if (res.ok) {
-        setReviewCount(result.data?.length || 0);
+        // Get technician reviews
+        const reviewRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/reviews/technician/${technicianId}`,
+          {
+            credentials: "include",
+            cache: "no-store",
+          }
+        );
+
+        const reviewResult = await reviewRes.json();
+
+        if (!reviewRes.ok) {
+          throw new Error(reviewResult.message);
+        }
+
+        setReviewCount(reviewResult.data?.length || 0);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingReviews(false);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  getReviewCount();
-}, []);
+    getReviewCount();
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Heading */}
@@ -114,19 +138,19 @@ export default function TechnicianDashboardPage() {
             Quick Actions
           </h2>
 
-          
-
           <div className="flex flex-wrap gap-4">
             <Link href="/technician-dashboard/category">
-              <Button> View Category </Button>
+              <Button>
+                View Category
+              </Button>
             </Link>
 
             <Link href="/technician-dashboard/createtechnicianprofile">
-  <Button variant="outline">
-    <UserCog className="mr-2 h-4 w-4" />
-    Create Technician Profile
-  </Button>
-</Link>
+              <Button variant="outline">
+                <UserCog className="mr-2 h-4 w-4" />
+                Create Technician Profile
+              </Button>
+            </Link>
 
             <Link href="/technician-dashboard/services">
               <Button variant="outline">
@@ -140,12 +164,18 @@ export default function TechnicianDashboardPage() {
               </Button>
             </Link>
 
-  <Link href="/technician-dashboard/myfeedback">
-    <Button variant="outline">
-      My Feedback ({reviewCount})
-    </Button>
-  </Link>
-
+            <Link href="/technician-dashboard/myfeedback">
+              <Button variant="outline" disabled={loadingReviews}>
+                {loadingReviews ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  `My Feedback (${reviewCount})`
+                )}
+              </Button>
+            </Link>
 
             <Link href="/technician-dashboard/availability">
               <Button variant="outline">
