@@ -26,11 +26,13 @@ app
 |   └── layout.tsx
 │
 ├── (dashboard)
-│   ├── admin-dashboard
+│   ├── admin-dashboard 
+│   ├── createnewcategory
 │   |   ├── page.tsx
-│   |   ├── 
-│   |   ├── 
-│   |   ├── 
+│   ├── categories
+│   |   ├── page.tsx
+│   |   
+│   ├── page.tsx 
 │   |  
 │   ├── customer-dashboard
 │   |   ├── page.tsx
