@@ -27,7 +27,7 @@ app
 │
 ├── (dashboard)
 │   ├── admin-dashboard
-│   |   ├── 
+│   |   ├── page.tsx
 │   |   ├── 
 │   |   ├── 
 │   |   ├── 
