@@ -51,6 +51,9 @@ app
 │       ├── booking
 │       |   ├── page.tsx
 │       |
+│       ├── availability
+│       |   ├── page.tsx
+│       |
 ├── loading.tsx
 
 
