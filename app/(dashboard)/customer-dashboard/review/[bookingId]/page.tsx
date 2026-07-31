@@ -75,17 +75,18 @@ export default function ReviewPage() {
 
       const data = await res.json();
 
-console.log("Status:", res.status);
-console.log("Response:", data);
 
-      if(!res.ok){
+      if (!res.ok) {
+  if (data.message === "You have already reviewed this booking.") {
+    toast.info("You have already reviewed this booking.");
 
-        throw new Error(
-          data.message || "Review failed"
-        );
+    router.push("/customer-dashboard/mybooking");
 
-      }
+    return;
+  }
 
+  throw new Error(data.message || "Review failed");
+}
 
 
       toast.success(
@@ -95,7 +96,7 @@ console.log("Response:", data);
 
       router.push(
         "/customer-dashboard/mybooking"
-      );
+      ); 
 
 
 
