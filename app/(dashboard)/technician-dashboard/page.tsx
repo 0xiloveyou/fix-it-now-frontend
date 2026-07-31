@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Briefcase,
   Calendar,
@@ -11,7 +12,33 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+
 export default function TechnicianDashboardPage() {
+  const [reviewCount, setReviewCount] = useState(0);
+  useEffect(() => {
+  const getReviewCount = async () => {
+    try {
+      const technicianId = "YOUR_TECHNICIAN_ID"; // Replace with logged-in technician ID
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/reviews/technician/${technicianId}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      const result = await res.json();
+
+      if (res.ok) {
+        setReviewCount(result.data?.length || 0);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  getReviewCount();
+}, []);
   return (
     <div className="space-y-8">
       {/* Heading */}
@@ -103,6 +130,13 @@ export default function TechnicianDashboardPage() {
                 View Bookings
               </Button>
             </Link>
+
+  <Link href="/technician-dashboard/myfeedback">
+    <Button variant="outline">
+      My Feedback ({reviewCount})
+    </Button>
+  </Link>
+
 
             <Link href="/technician-dashboard/availability">
               <Button variant="outline">
