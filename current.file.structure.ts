@@ -39,6 +39,9 @@ app
 │   |   ├── mybooking
 │   |   |     ├── page.tsx
 │   |   |    
+│   |   ├── review
+│   |   |     ├── page.tsx
+│   |   |    
 │   |   ├── payment
 │   |   |     ├── [bookingId]
 │   |   |          ├── page.tsx

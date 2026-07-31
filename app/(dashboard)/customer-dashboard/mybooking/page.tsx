@@ -19,6 +19,8 @@ import {
 import {
   Badge,
 } from "@/components/ui/badge";
+import { Star } from "lucide-react";
+
 
 interface Booking {
   id: string;
@@ -227,12 +229,14 @@ export default function MyBookingsPage() {
                     </Button>
                   </Link>
 
-                  <div className="flex gap-3">
+<div className="flex gap-3">
+
   {booking.status === "REQUESTED" && (
     <Button variant="destructive">
       Cancel Booking
     </Button>
   )}
+
 
   {booking.status === "ACCEPTED" && (
     <Link
@@ -243,6 +247,21 @@ export default function MyBookingsPage() {
       </Button>
     </Link>
   )}
+
+
+  {(booking.status === "PAID" || booking.status === "COMPLETED") && (
+  <Link
+    href={`/customer-dashboard/review/${booking.id}?service=${encodeURIComponent(
+      booking.service.title
+    )}`}
+  >
+    <Button>
+      <Star className="w-4 h-4 mr-2" />
+      Give Review
+    </Button>
+  </Link>
+)}
+
 </div>
                 </div>
               </CardContent>
