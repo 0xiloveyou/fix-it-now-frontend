@@ -8,7 +8,7 @@ import {
   ClipboardList,
   Wrench,
 } from "lucide-react";
-
+import { UserCog } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -114,10 +114,19 @@ export default function TechnicianDashboardPage() {
             Quick Actions
           </h2>
 
+          
+
           <div className="flex flex-wrap gap-4">
             <Link href="/technician-dashboard/category">
               <Button> View Category </Button>
             </Link>
+
+            <Link href="/technician-dashboard/createtechnicianprofile">
+  <Button variant="outline">
+    <UserCog className="mr-2 h-4 w-4" />
+    Create Technician Profile
+  </Button>
+</Link>
 
             <Link href="/technician-dashboard/services">
               <Button variant="outline">

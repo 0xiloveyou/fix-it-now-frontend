@@ -65,6 +65,9 @@ app
 │       ├── myfeedback
 │       |   ├── page.tsx
 │       |
+│       ├── createtechnicianprofile
+│       |   ├── page.tsx
+│       |
 ├── loading.tsx
 
 
