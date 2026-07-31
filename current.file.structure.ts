@@ -8,8 +8,11 @@ app
 │   ├── services                 
 │   |     ├── page.tsx
 │   |     ├── [id]
-│   ├── 
-│   |    ├──
+│   ├── contact
+│   |    ├── page.tsx
+│
+│   ├── about
+│   |    ├── page.tsx
 │
 ├── (auth)
 |   ├── _actions
