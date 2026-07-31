@@ -88,8 +88,8 @@ export default function TechnicianDashboardPage() {
           </h2>
 
           <div className="flex flex-wrap gap-4">
-            <Link href="/technician-dashboard/services/create">
-              <Button>Create Service</Button>
+            <Link href="/technician-dashboard/category">
+              <Button> View Category </Button>
             </Link>
 
             <Link href="/technician-dashboard/services">

@@ -42,7 +42,10 @@ app
 │       ├── services
 │       |    ├── page.tsx
 │       |    ├──
-│       ├── create
+│       ├── category
+|       |    ├──page.tsx
+|       |    
+│       ├── createservice
 |       |    ├──page.tsx
 |       |    
 │       ├── booking
