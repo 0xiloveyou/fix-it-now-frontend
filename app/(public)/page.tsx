@@ -44,7 +44,7 @@ export default function HomePage() {
               Connect with certified technicians in your area. Fast, reliable, and transparent pricing for all your home repair needs.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link href="/technicians">
+              <Link href="/services">
                 <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                 Book a Technician
                </Button>

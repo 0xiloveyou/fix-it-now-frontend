@@ -19,7 +19,6 @@ export function Navbar({ user }: NavbarProps) {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/services', label: 'Services' },
-    { href: '/technicians', label: 'Technicians' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];

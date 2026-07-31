@@ -6,8 +6,10 @@ app
 │   ├── page.tsx                  // Home
 │   ├── layout.tsx                  
 │   ├── services                 
-│        ├── page.tsx
-│        ├── [id]
+│   |     ├── page.tsx
+│   |     ├── [id]
+│   ├── 
+│   |    ├──
 │
 ├── (auth)
 |   ├── _actions
