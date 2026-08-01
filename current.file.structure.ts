@@ -27,12 +27,18 @@ app
 │
 ├── (dashboard)
 │   ├── admin-dashboard 
-│   ├── createnewcategory
-│   |   ├── page.tsx
-│   ├── categories
-│   |   ├── page.tsx
-│   |   
-│   ├── page.tsx 
+│   |    ├── createnewcategory
+│   |    |    ├── page.tsx
+│   |    ├── categories
+│   |    |   ├── page.tsx
+│   |    ├── users
+│   |    |   ├── page.tsx
+│   |    |
+│   |    ├── bookings
+│   |    |   ├── page.tsx
+│   |    |
+│   |    |
+│   |    ├── page.tsx 
 │   |  
 │   ├── customer-dashboard
 │   |   ├── page.tsx
