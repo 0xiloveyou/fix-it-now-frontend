@@ -8,13 +8,14 @@ import { NavbarProps } from '@/lib/types';
 import { toast } from 'sonner';
 import { logout } from '@/service/logout';
 import { useRouter } from 'next/navigation';
-
+import Image from "next/image";
 
 export function Navbar({ user }: NavbarProps) {
   const isLoggedIn = user?.success && user?.data?.user;
   const userName = user?.data?.user?.name || 'User';
   const userRole = user?.data?.user?.role;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const userImage = user?.data?.user?.profileImage;
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -105,9 +106,21 @@ export function Navbar({ user }: NavbarProps) {
                     </Button>
                  
                   <div className="relative group">
-                    <button className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold hover:bg-blue-700 transition-colors">
-                      {userName.charAt(0).toUpperCase()}
-                    </button>
+                    <button className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors">
+  {userImage ? (
+    <Image
+      src={userImage}
+      alt={userName}
+      width={40}
+      height={40}
+      className="h-full w-full object-cover"
+    />
+  ) : (
+    <span className="text-sm font-bold">
+      {userName.charAt(0).toUpperCase()}
+    </span>
+  )}
+</button>
                     {/* Dropdown Menu */}
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
                       <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 gap-2 flex items-center">
@@ -170,11 +183,13 @@ export function Navbar({ user }: NavbarProps) {
               </div>
             ) : (
               <div className="space-y-2 px-4">
-                <Link href="/dashboard" className="block">
-                  <Button variant="outline" className="w-full">
-                    Dashboard
-                  </Button>
-                </Link>
+                <Button
+  variant="outline"
+  className="w-full"
+  onClick={async () => await handleUserMenuAction("dashboard")}
+>
+  Dashboard
+</Button>
                 <Link href="/profile" className="block">
                   <Button variant="outline" className="w-full">
                     Profile
