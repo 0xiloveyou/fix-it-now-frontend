@@ -10,10 +10,14 @@ app
 │   |     ├── [id]
 │   ├── contact
 │   |    ├── page.tsx
-│
+│   |
 │   ├── about
 │   |    ├── page.tsx
-│
+│   |
+│   ├── profile
+│   |    ├── page.tsx
+│        |updateprofile
+|           ├── page.tsx
 ├── (auth)
 |   ├── _actions
 |   |    ├── authAction.ts
