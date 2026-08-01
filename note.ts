@@ -36,7 +36,7 @@ pnpm dlx shadcn@latest add dialog
 pnpm dlx shadcn@latest add form
 pnpm add react-hook-form zod @hookform/resolvers
 pnpm add @radix-ui/react-slot
-
+pnpm dlx shadcn@latest add table
 
 
 
