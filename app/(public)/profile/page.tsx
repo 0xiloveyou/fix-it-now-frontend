@@ -134,7 +134,8 @@ export default function ProfilePage() {
               <Image
                 src={user.profileImage}
                 alt={user.name}
-                fill
+               width={150}
+  height={150}
                 className="h-36 w-36 rounded-full border object-cover"
               />
             ) : (
