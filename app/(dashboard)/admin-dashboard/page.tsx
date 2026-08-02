@@ -26,7 +26,9 @@ interface UserData {
 export default function AdminDashboardPage() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
+ const [currentPage, setCurrentPage] = useState(1);
 
+const usersPerPage = 5;
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -67,6 +69,10 @@ export default function AdminDashboardPage() {
   const totalAdmins = users.filter(
     (u) => u.role === "ADMIN"
   ).length;
+
+  const totalPages = Math.ceil(
+  users.length / usersPerPage
+);
 
   if (loading) {
     return (
@@ -264,7 +270,12 @@ export default function AdminDashboardPage() {
 
                 <tbody>
 
-                  {users.slice(0, 5).map((user) => (
+                  {users
+  .slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  )
+  .map((user) => (
 
                     <tr
                       key={user.id}
@@ -310,7 +321,46 @@ export default function AdminDashboardPage() {
                 </tbody>
 
               </table>
+              <div className="mt-6 flex items-center justify-between">
+  <p className="text-sm text-muted-foreground">
+    Showing{" "}
+    {Math.min(
+      (currentPage - 1) * usersPerPage + 1,
+      users.length
+    )}{" "}
+    -
+    {" "}
+    {Math.min(
+      currentPage * usersPerPage,
+      users.length
+    )}{" "}
+    of {users.length} users
+  </p>
 
+  <div className="flex gap-2">
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={currentPage === 1}
+      onClick={() =>
+        setCurrentPage((prev) => prev - 1)
+      }
+    >
+      Previous
+    </Button>
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={currentPage === totalPages}
+      onClick={() =>
+        setCurrentPage((prev) => prev + 1)
+      }
+    >
+      Next
+    </Button>
+  </div>
+</div>
             </div>
           )}
 
