@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   "/",
   "/about",
   "/contact",
+  "/learn-more",
 ];
 
 

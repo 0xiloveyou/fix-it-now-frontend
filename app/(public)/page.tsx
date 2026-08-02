@@ -49,10 +49,11 @@ export default function HomePage() {
                 Book a Technician
                </Button>
               </Link>
-              
+              <Link href="/learn-more">
               <Button size="lg" variant="outline">
                 Learn More
               </Button>
+              </Link>
             </div>
           </div>
         </div>
