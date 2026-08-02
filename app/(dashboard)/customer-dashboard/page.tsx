@@ -7,6 +7,7 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
+  Wallet,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -64,7 +65,19 @@ export default function CustomerDashboardPage() {
   }, []);
 
   const totalBookings = bookings.length;
-
+  const totalSpending = useMemo(() => {
+  return bookings
+    .filter(
+      (booking) =>
+        booking.status === "PAID" ||
+        booking.status === "COMPLETED"
+    )
+    .reduce(
+      (total, booking) =>
+        total + booking.totalPrice,
+      0
+    );
+}, [bookings]);
   const activeBookings = useMemo(() => {
     return bookings.filter((booking) =>
       [
@@ -104,7 +117,7 @@ export default function CustomerDashboardPage() {
 
       {/* Statistics */}
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
         <Card>
           <CardContent className="flex items-center justify-between p-6">
             <div>
@@ -154,6 +167,24 @@ export default function CustomerDashboardPage() {
         </Card>
 
         <Card>
+  <CardContent className="flex items-center justify-between p-6">
+    <div>
+      <p className="text-sm text-muted-foreground">
+        Total Spending
+      </p>
+
+      <h2 className="text-3xl font-bold mt-2">
+        {loading
+          ? "..."
+          : `৳ ${totalSpending.toLocaleString()}`}
+      </h2>
+    </div>
+
+    <Wallet className="h-9 w-9 text-green-600" />
+  </CardContent>
+</Card>
+
+        <Card>
           <CardContent className="flex items-center justify-between p-6">
             <div>
               <p className="text-sm text-muted-foreground">
@@ -188,6 +219,13 @@ export default function CustomerDashboardPage() {
                 My Bookings
               </Button>
             </Link>
+
+            <Link href="/customer-dashboard/payment-history">
+  <Button variant="outline">
+    Payment History
+  </Button>
+</Link>
+            
 
             
           </div>

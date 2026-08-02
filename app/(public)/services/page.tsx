@@ -80,7 +80,7 @@ export default function ServicesPage() {
       params.append("limit", "9");
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/service?${params.toString()}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/services?${params.toString()}`,
         {
           cache: "no-store",
         }

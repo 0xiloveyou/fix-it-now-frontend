@@ -54,6 +54,9 @@ app
 │   |   ├── review
 │   |   |     ├── page.tsx
 │   |   |    
+│   |   ├── payment-history
+│   |   |     ├── page.tsx
+│   |   |    
 │   |   ├── payment
 │   |   |     ├── [bookingId]
 │   |   |          ├── page.tsx
