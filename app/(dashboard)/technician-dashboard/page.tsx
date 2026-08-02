@@ -111,8 +111,10 @@ export default function TechnicianDashboardPage() {
         ).length;
 
         const completed = bookingsData.filter(
-          (b) => b.status === "COMPLETED"
-        ).length;
+  (b) =>
+    b.status === "PAID" ||
+    b.status === "COMPLETED"
+).length;
 
         const earnings = bookingsData
           .filter(
@@ -215,7 +217,7 @@ export default function TechnicianDashboardPage() {
             <p className="text-sm text-muted-foreground">
               Completed Jobs
             </p>
-
+ 
             <h2 className="mt-2 text-3xl font-bold">
               {loading ? "..." : stats.completed}
             </h2>
