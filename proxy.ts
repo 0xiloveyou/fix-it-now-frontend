@@ -1,7 +1,5 @@
-import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-
 import { JwtPayload } from "jsonwebtoken";
 
 import { getNewAccessToken } from "./service/refreshToken";
@@ -16,8 +14,8 @@ const AUTH_ROUTES = [
 
 const PUBLIC_ROUTES = [
   "/",
-  "/services",
-  "/services/:path*",
+  "/about",
+  "/contact",
 ];
 
 
@@ -25,9 +23,6 @@ const PUBLIC_ROUTES = [
 export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
-
-
-  const cookieStore = await cookies();
 
 
   let accessToken =
@@ -59,8 +54,14 @@ export async function proxy(request: NextRequest) {
 
 
 
+  const response = NextResponse.next();
 
-  // Refresh access token
+
+
+
+  // ==============================
+  // Refresh Access Token
+  // ==============================
 
   if(
     !decodedAccessToken?.success &&
@@ -79,14 +80,15 @@ export async function proxy(request: NextRequest) {
 
 
 
-      cookieStore.set(
+      response.cookies.set(
         "accessToken",
         newAccessToken,
         {
           httpOnly:true,
-          secure:false,
           sameSite:"lax",
-          maxAge:60*60*24,
+          secure:false,
+          path:"/",
+          maxAge:60 * 60 * 24,
         }
       );
 
@@ -101,35 +103,50 @@ export async function proxy(request: NextRequest) {
           newAccessToken,
           process.env.JWT_ACCESS_SECRET as string
         );
+
     }
+
   }
 
 
 
 
-  let userRole = null;
+
+  let userRole:string | null = null;
 
 
 
   if(decodedAccessToken?.success){
 
     userRole =
-      (decodedAccessToken.data as JwtPayload)
-        .role;
+      (decodedAccessToken.data as JwtPayload).role;
 
   }
 
 
 
 
-  // remove invalid token
+
+  // ==============================
+  // Invalid Token Cleanup
+  // ==============================
 
   if(
     accessToken &&
     !decodedAccessToken?.success
   ){
 
-    cookieStore.delete("accessToken");
+    response.cookies.delete(
+      "accessToken"
+    );
+
+
+    response.cookies.delete(
+      "refreshToken"
+    );
+
+
+    accessToken = undefined;
 
   }
 
@@ -137,19 +154,13 @@ export async function proxy(request: NextRequest) {
 
 
 
+
   const isPublicRoute =
-    PUBLIC_ROUTES.some((route)=>{
-
-      if(route.includes(":path")){
-        return pathname.startsWith(
-          route.replace("/:path*","")
-        )
-      }
-
-      return pathname === route;
-
-    });
-
+    PUBLIC_ROUTES.some(
+      (route)=>
+        pathname === route ||
+        pathname.startsWith(route + "/")
+    );
 
 
 
@@ -160,7 +171,11 @@ export async function proxy(request: NextRequest) {
 
 
 
-  // Not logged in
+
+
+  // ==============================
+  // Protect Private Routes
+  // ==============================
 
   if(
     !accessToken &&
@@ -181,7 +196,9 @@ export async function proxy(request: NextRequest) {
     );
 
 
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(
+      loginUrl
+    );
 
   }
 
@@ -189,7 +206,12 @@ export async function proxy(request: NextRequest) {
 
 
 
-  // Already logged in
+
+
+
+  // ==============================
+  // Logged User Cannot Access Login
+  // ==============================
 
   if(
     accessToken &&
@@ -197,7 +219,7 @@ export async function proxy(request: NextRequest) {
   ){
 
 
-    if(userRole==="CUSTOMER"){
+    if(userRole === "CUSTOMER"){
 
       return NextResponse.redirect(
         new URL(
@@ -209,7 +231,8 @@ export async function proxy(request: NextRequest) {
     }
 
 
-    if(userRole==="TECHNICIAN"){
+
+    if(userRole === "TECHNICIAN"){
 
       return NextResponse.redirect(
         new URL(
@@ -221,7 +244,8 @@ export async function proxy(request: NextRequest) {
     }
 
 
-    if(userRole==="ADMIN"){
+
+    if(userRole === "ADMIN"){
 
       return NextResponse.redirect(
         new URL(
@@ -232,30 +256,6 @@ export async function proxy(request: NextRequest) {
 
     }
 
-  }
-
-
-
-
-
-
-  // Role protection
-
-
-  if(
-    pathname.startsWith(
-      "/admin-dashboard"
-    )
-    &&
-    userRole !== "ADMIN"
-  ){
-
-    return NextResponse.redirect(
-      new URL(
-        "/not-found",
-        request.url
-      )
-    );
 
   }
 
@@ -263,11 +263,16 @@ export async function proxy(request: NextRequest) {
 
 
 
+
+
+
+  // ==============================
+  // Role Protection
+  // ==============================
+
+
   if(
-    pathname.startsWith(
-      "/customer-dashboard"
-    )
-    &&
+    pathname.startsWith("/customer-dashboard") &&
     userRole !== "CUSTOMER"
   ){
 
@@ -284,11 +289,9 @@ export async function proxy(request: NextRequest) {
 
 
 
+
   if(
-    pathname.startsWith(
-      "/technician-dashboard"
-    )
-    &&
+    pathname.startsWith("/technician-dashboard") &&
     userRole !== "TECHNICIAN"
   ){
 
@@ -305,9 +308,29 @@ export async function proxy(request: NextRequest) {
 
 
 
-  return NextResponse.next();
+
+  if(
+    pathname.startsWith("/admin-dashboard") &&
+    userRole !== "ADMIN"
+  ){
+
+    return NextResponse.redirect(
+      new URL(
+        "/not-found",
+        request.url
+      )
+    );
+
+  }
+
+
+
+
+
+  return response;
 
 }
+
 
 
 
