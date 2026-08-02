@@ -1,73 +1,106 @@
-"use server"
+"use server";
 
-import jwt, { JwtPayload } from "jsonwebtoken"
-import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
-// import { toast } from "sonner"
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
-type LoginState = {
-    success : true,
-    statusCode : number,
-    message : string,
-    data : {
-        accessToken : string,
-        refreshToken : string
+const loginSchema = z.object({
+  email: z.email("Please enter a valid email address."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
+});
+
+export type LoginState = {
+  success: boolean;
+  statusCode?: number;
+  message?: string;
+  data?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export async function loginAction(
+  redirectTo: string,
+  prevState: LoginState,
+  formData: FormData
+): Promise<LoginState> {
+  const values = {
+    email: String(formData.get("email") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  };
+
+  const validation = loginSchema.safeParse(values);
+
+  if (!validation.success) {
+    return {
+      success: false,
+      statusCode: 400,
+      message: validation.error.issues[0].message,
+    };
+  }
+
+  const res = await fetch(
+    `${process.env.BACKEND_API_URL}/api/auth/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validation.data),
     }
-}
+  );
 
+  const result = await res.json();
 
-export const loginAction = async (redirectTo : string, prevState : LoginState , formData: FormData) => {
+  if (!result.success) {
+    return {
+      success: false,
+      statusCode: res.status,
+      message: result.message || "Invalid email or password.",
+    };
+  }
 
-    const email = formData.get("email");
-    const password = formData.get("password");
+  const cookieStore = await cookies();
 
-    const payload = {
-        email,
-        password
-    }
+  cookieStore.set("accessToken", result.data.accessToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24,
+  });
 
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
-        method : "POST",
-        headers : {
-            "Content-Type" : "application/json"
-        },
-        body : JSON.stringify(payload)
-    });
+  cookieStore.set("refreshToken", result.data.refreshToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+  });
 
-    const result = await res.json();
+  const decoded = jwt.decode(result.data.accessToken) as JwtPayload;
 
-    if(result.success){
-        const cookieStore = await cookies()
+  if (
+    redirectTo &&
+    redirectTo.startsWith("/") &&
+    !redirectTo.startsWith("//")
+  ) {
+    redirect(redirectTo);
+  }
 
-        cookieStore.set("accessToken", result.data.accessToken , {
-            httpOnly : true,
-            maxAge : 60 * 60 * 24,
-            sameSite : "lax",
-        });
-        cookieStore.set("refreshToken", result.data.refreshToken , {
-            httpOnly : true,
-            maxAge : 60 * 60 * 24 * 7,
-            sameSite : "lax",
-        });
+  switch (decoded.role) {
+    case "CUSTOMER":
+      redirect("/customer-dashboard");
 
-        const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
+    case "ADMIN":
+      redirect("/admin-dashboard");
 
-        if(redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")){
-            redirect(redirectTo)
-        }
+    case "TECHNICIAN":
+      redirect("/technician-dashboard");
 
-        if(decodedToken.role === "CUSTOMER"){
-            redirect("/customer-dashboard");
-        } else if (decodedToken.role === "ADMIN"){
-            redirect("/admin-dashboard");
-        } else if (decodedToken.role === "TECHNICIAN"){
-            redirect("/technician-dashboard");
-        }
-
-        return result
-    }
-    else{
-        redirect("/register");
-    }
-    
+    default:
+      return {
+        success: true,
+        statusCode: 200,
+        message: "Login successful.",
+        data: result.data,
+      };
+  }
 }

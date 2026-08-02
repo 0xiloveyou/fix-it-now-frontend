@@ -1,49 +1,65 @@
-"use client" /// login form is a client component 
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { useSearchParams } from "next/navigation"
-import { useActionState, useEffect } from "react"
-import { toast } from "sonner"
-import { loginAction } from "../_actions/authActions"
+import { useActionState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
+import {
+  loginAction,
+  type LoginState,
+} from "../_actions/authActions";
 
-const LoginForm = () => {
-    const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirectTo") ?? ""
-    const [state, action, pending] = useActionState(loginAction.bind(null, redirectTo), false)
-    
-    // const router = useRouter()
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
+const initialState: LoginState = {
+  success: false,
+  statusCode: 0,
+  message: "",
+};
 
-    useEffect(()=> {
-        if(!state) return;
+export default function LoginForm() {
+  const searchParams = useSearchParams();
 
-        // if(state.success){
-        //     toast.success(state.message || "Login Successful");
-        //     // router.push("/dashboard")
-        // }
+  const redirectTo = searchParams.get("redirectTo") ?? "";
 
-        if(!state.success){
-            toast.error(state.message || "Login failed");
-        }
-    }, [state]);
+  const [state, action, pending] = useActionState(
+    loginAction.bind(null, redirectTo),
+    initialState
+  );
 
+  useEffect(() => {
+    if (!state.message) return;
+
+    if (state.success) {
+      toast.success(state.message);
+    } else {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <form action={action} className="space-y-4">
-        <Card className="p-5 space-y-4">
-            <Input name="email" type="email" placeholder="Enter Your Email" required />
-            <Input name="password" type="password" placeholder="Enter Your Password" required />
-            <Button type="submit">
-                {
-                    pending ? "Submitting..." : "Login"
-                }
-            </Button>
-        </Card>
-    </form>
-  )
-}
+      <Card className="space-y-4 p-5">
+        <Input
+          name="email"
+          type="email"
+          placeholder="Enter Your Email"
+          required
+        />
 
-export default LoginForm
+        <Input
+          name="password"
+          type="password"
+          placeholder="Enter Your Password"
+          required
+        />
+
+        <Button type="submit" disabled={pending}>
+          {pending ? "Submitting..." : "Login"}
+        </Button>
+      </Card>
+    </form>
+  );
+}
