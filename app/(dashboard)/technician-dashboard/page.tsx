@@ -36,7 +36,9 @@ interface Booking {
 
 export default function TechnicianDashboardPage() {
   const [loading, setLoading] = useState(true);
- const [bookings, setBookings] = useState<Booking[]>([]);
+
+  const [bookings, setBookings] = useState<Booking[]>([]);
+
   const [reviewCount, setReviewCount] = useState(0);
 
   const [stats, setStats] = useState({
@@ -50,7 +52,7 @@ export default function TechnicianDashboardPage() {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        // Logged in user
+        // Logged-in user
         const userRes = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/user/me`,
           {
@@ -58,13 +60,13 @@ export default function TechnicianDashboardPage() {
           }
         );
 
-        const user = await userRes.json();
+        const userResult = await userRes.json();
 
         if (!userRes.ok) {
-          throw new Error(user.message);
+          throw new Error(userResult.message);
         }
 
-        const technicianId = user.data.user.id;
+        const technicianId = userResult.data.user.id;
 
         // Reviews
         const reviewRes = await fetch(
@@ -77,9 +79,11 @@ export default function TechnicianDashboardPage() {
 
         const reviewResult = await reviewRes.json();
 
-        setReviewCount(reviewResult.data?.length || 0);
+        if (reviewRes.ok) {
+          setReviewCount(reviewResult.data?.length || 0);
+        }
 
-        // Technician bookings
+        // Technician Bookings
         const bookingRes = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/bookings/technician`,
           {
@@ -90,33 +94,39 @@ export default function TechnicianDashboardPage() {
 
         const bookingResult = await bookingRes.json();
 
-       const bookingsData: Booking[] = bookingResult.data || [];
+        if (!bookingRes.ok) {
+          throw new Error(bookingResult.message);
+        }
 
-setBookings(bookingsData);
+        const bookingsData: Booking[] = bookingResult.data || [];
 
-        const pending = bookings.filter(
+        setBookings(bookingsData);
+
+        const pending = bookingsData.filter(
           (b) => b.status === "REQUESTED"
         ).length;
 
-        const active = bookings.filter(
+        const active = bookingsData.filter(
           (b) => b.status === "IN_PROGRESS"
         ).length;
 
-        const completed = bookings.filter(
+        const completed = bookingsData.filter(
           (b) => b.status === "COMPLETED"
         ).length;
 
-        const earnings = bookings
+        const earnings = bookingsData
           .filter(
             (b) =>
               b.status === "PAID" ||
               b.status === "COMPLETED"
           )
-          .reduce((sum, booking) => sum + booking.totalPrice, 0);
-bookings.filter 
-        // Count unique services
+          .reduce(
+            (sum, booking) => sum + booking.totalPrice,
+            0
+          );
+
         const services = new Set(
-          bookings.map((b) => b.service.id)
+          bookingsData.map((b) => b.service.id)
         ).size;
 
         setStats({
@@ -234,7 +244,7 @@ bookings.filter
       </Card>
     </div>
 
-    {/* Quick Actions */}
+{/* Quick Actions */}
 <Card>
   <CardContent className="p-6">
     <h2 className="mb-5 text-xl font-semibold">
@@ -242,9 +252,10 @@ bookings.filter
     </h2>
 
     <div className="flex flex-wrap gap-4">
-
       <Link href="/technician-dashboard/category">
-        <Button>View Category</Button>
+        <Button>
+          View Category
+        </Button>
       </Link>
 
       <Link href="/technician-dashboard/createtechnicianprofile">
@@ -284,7 +295,6 @@ bookings.filter
           Availability
         </Button>
       </Link>
-
     </div>
   </CardContent>
 </Card>
@@ -292,9 +302,17 @@ bookings.filter
 {/* Recent Bookings */}
 <Card>
   <CardContent className="p-6">
-    <h2 className="mb-4 text-xl font-semibold">
-      Recent Bookings
-    </h2>
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-xl font-semibold">
+        Recent Bookings
+      </h2>
+
+      <Link href="/technician-dashboard/booking">
+        <Button size="sm" variant="outline">
+          View All
+        </Button>
+      </Link>
+    </div>
 
     {bookings.length === 0 ? (
       <p className="text-muted-foreground">
@@ -305,21 +323,23 @@ bookings.filter
         {bookings.slice(0, 5).map((booking) => (
           <div
             key={booking.id}
-            className="flex items-center justify-between border rounded-lg p-3"
+            className="flex items-center justify-between rounded-lg border p-4"
           >
             <div>
-              <h3 className="font-medium">
+              <h3 className="font-semibold">
                 {booking.service.title}
               </h3>
 
               <p className="text-sm text-muted-foreground">
-                {booking.status}
+                Status: {booking.status}
               </p>
             </div>
 
-            <p className="font-semibold">
-              ৳{booking.totalPrice}
-            </p>
+            <div className="text-right">
+              <p className="font-bold text-green-600">
+                ৳{booking.totalPrice}
+              </p>
+            </div>
           </div>
         ))}
       </div>
@@ -327,7 +347,7 @@ bookings.filter
   </CardContent>
 </Card>
 
-{/* Recent Services */}
+{/* Services Overview */}
 <Card>
   <CardContent className="p-6">
     <h2 className="mb-4 text-xl font-semibold">
@@ -335,8 +355,11 @@ bookings.filter
     </h2>
 
     <p className="text-muted-foreground">
-      You currently offer{" "}
-      <strong>{stats.services}</strong> service(s).
+      You currently provide{" "}
+      <span className="font-bold text-foreground">
+        {stats.services}
+      </span>{" "}
+      service(s).
     </p>
   </CardContent>
 </Card>
