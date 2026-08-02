@@ -14,6 +14,9 @@ app
 │   ├── about
 │   |    ├── page.tsx
 │   |
+│   ├── learn-more
+│   |    ├── page.tsx
+│   |
 │   ├── profile
 │   |    ├── page.tsx
 │        |updateprofile
@@ -84,6 +87,9 @@ app
 │       |   ├── page.tsx
 │       |
 ├── loading.tsx
+├── error.tsx
+├── layout.tsx
+├── not-found.tsx
 
 
 

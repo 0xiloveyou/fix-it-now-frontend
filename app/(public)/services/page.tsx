@@ -29,12 +29,12 @@ interface Service {
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
+  // ===========================
   // Filters
+  // ===========================
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
@@ -42,7 +42,32 @@ export default function ServicesPage() {
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
+  // ===========================
+  // Debounced Filters
+  // ===========================
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedCategory, setDebouncedCategory] = useState("");
+  const [debouncedLocation, setDebouncedLocation] = useState("");
+  const [debouncedRating, setDebouncedRating] = useState("");
+  const [debouncedPriceMin, setDebouncedPriceMin] = useState("");
+  const [debouncedPriceMax, setDebouncedPriceMax] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setDebouncedCategory(category);
+      setDebouncedLocation(location);
+      setDebouncedRating(rating);
+      setDebouncedPriceMin(priceMin);
+      setDebouncedPriceMax(priceMax);
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timer);
+  }, [search, category, location, rating, priceMin, priceMax]);
+
+  // ===========================
   // Pagination
+  // ===========================
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -52,28 +77,28 @@ export default function ServicesPage() {
 
       const params = new URLSearchParams();
 
-      if (search) {
-        params.append("searchTerm", search);
+      if (debouncedSearch) {
+        params.append("searchTerm", debouncedSearch);
       }
 
-      if (category) {
-        params.append("category", category);
+      if (debouncedCategory) {
+        params.append("category", debouncedCategory);
       }
 
-      if (location) {
-        params.append("location", location);
+      if (debouncedLocation) {
+        params.append("location", debouncedLocation);
       }
 
-      if (rating) {
-        params.append("rating", rating);
+      if (debouncedRating) {
+        params.append("rating", debouncedRating);
       }
 
-      if (priceMin) {
-        params.append("priceMin", priceMin);
+      if (debouncedPriceMin) {
+        params.append("priceMin", debouncedPriceMin);
       }
 
-      if (priceMax) {
-        params.append("priceMax", priceMax);
+      if (debouncedPriceMax) {
+        params.append("priceMax", debouncedPriceMax);
       }
 
       params.append("page", page.toString());
@@ -89,16 +114,11 @@ export default function ServicesPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          result.message || "Failed to fetch services"
-        );
+        throw new Error(result.message || "Failed to fetch services");
       }
 
       setServices(result.data);
-
-      setTotalPages(
-        Math.ceil(result.meta.total / result.meta.limit)
-      );
+      setTotalPages(Math.ceil(result.meta.total / result.meta.limit));
     } catch (err) {
       setError(
         err instanceof Error
@@ -111,16 +131,16 @@ export default function ServicesPage() {
   };
 
   useEffect(() => {
-    fetchServices();
-  }, [
-    search,
-    category,
-    location,
-    rating,
-    priceMin,
-    priceMax,
-    page,
-  ]);
+  fetchServices();
+}, [
+  debouncedSearch,
+  debouncedCategory,
+  debouncedLocation,
+  debouncedRating,
+  debouncedPriceMin,
+  debouncedPriceMax,
+  page,
+]);
 
   if (loading) {
     return (
