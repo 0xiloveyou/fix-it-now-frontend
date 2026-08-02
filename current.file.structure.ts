@@ -97,12 +97,13 @@ root
 │   ├── Ui
 |   |    ├── button.tsx
 |   |    ├── card.tsx
-│   ├── Ui
-|   |    ├── button.tsx
-|   |    ├── card.tsx
+│   ├── utils
+|   |    ├── jwt.ts
 |
 ├── service
 |    ├── getme.ts
+|    ├── logout.ts
+|    ├── refreshToken.ts
 |
 ├── proxy.ts
 
