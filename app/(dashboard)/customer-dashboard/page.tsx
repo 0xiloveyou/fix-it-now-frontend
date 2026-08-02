@@ -189,11 +189,7 @@ export default function CustomerDashboardPage() {
               </Button>
             </Link>
 
-            <Link href="/customer-dashboard/profile">
-              <Button variant="outline">
-                My Profile
-              </Button>
-            </Link>
+            
           </div>
         </CardContent>
       </Card>
