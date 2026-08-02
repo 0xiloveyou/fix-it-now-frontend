@@ -97,11 +97,14 @@ root
 │   ├── Ui
 |   |    ├── button.tsx
 |   |    ├── card.tsx
+│   ├── Ui
+|   |    ├── button.tsx
+|   |    ├── card.tsx
 |
 ├── service
 |    ├── getme.ts
-
-
+|
+├── proxy.ts
 
 
 
