@@ -107,7 +107,9 @@ export default function ServicesPage() {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/services?${params.toString()}`,
         {
-          cache: "no-store",
+           next: {
+      revalidate: 0,
+    }
         }
       );
 
