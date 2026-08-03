@@ -2,6 +2,12 @@
 
 
 app
+├── (paymentGroup)
+│   ├── payment-cancel            
+│   |    ├── page.tsx          
+│   ├── payment-success            
+│   |    ├── page.tsx          
+|
 ├── (public)
 │   ├── page.tsx                  // Home
 │   ├── layout.tsx                  
@@ -49,6 +55,7 @@ app
 │   |  
 │   ├── customer-dashboard
 │   |   ├── page.tsx
+│   |   ├── layout.tsx
 │   |   ├── booking
 │   |   |     ├── page.tsx
 │   |   ├── mybooking
@@ -65,6 +72,7 @@ app
 │   |   |          ├── page.tsx
 │   ├── technician-dashboard
 │       ├── page.tsx
+│       ├── layout.tsx
 │       ├── services
 │       |    ├── page.tsx
 │       |    ├──
